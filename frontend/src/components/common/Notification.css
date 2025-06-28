@@ -1,0 +1,54 @@
+.notification-container {
+  padding: 20px;
+}
+
+.notification-container h2 {
+  text-align: center;
+  padding: 10px;
+}
+
+.notification-container .ant-tabs {
+  margin-top: 20px;
+}
+
+.notification-container .ant-tabs-tab {
+  font-size: 16px;
+}
+
+.notification-container .ant-tabs-tab:hover {
+  color: #1890ff;
+}
+
+.notification-container .ant-tabs-tab-active {
+  font-weight: bold;
+}
+
+.notification-container .card {
+  margin: 10px 0;
+  padding: 15px;
+  border: 1px solid #e8e8e8;
+  border-radius: 5px;
+  background-color: #f9f9f9;
+}
+
+.notification-container .card:hover {
+  background-color: #f1f1f1;
+}
+
+.notification-container .card-text {
+  font-size: 14px;
+}
+
+.notification-container .d-flex {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.notification-container .d-flex h4 {
+  cursor: pointer;
+  color: #1890ff;
+}
+
+.notification-container .d-flex h4:hover {
+  text-decoration: underline;
+}
