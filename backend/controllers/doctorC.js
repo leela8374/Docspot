@@ -82,53 +82,27 @@ const handleStatusController = async (req, res) => {
 };
 
 const documentDownloadController = async (req, res) => {
-  const appointId = req.query.appointId;
-  try {
-    const appointment = await appointmentSchema.findById(appointId);
-
-    if (!appointment) {
-      return res.status(404).send({ message: "Appointment not found" });
-    }
-
-    // Assuming that the document URL is stored in the "document" field of the appointment
-    const documentUrl = appointment.document?.path; // Use optional chaining to safely access the property
-
-    if (!documentUrl || typeof documentUrl !== "string") {
-      return res.status(404).send({ message: "Document URL is invalid", success: false });
-    }
-
-    // Construct the absolute file path
-    const absoluteFilePath = path.join(__dirname, "..", documentUrl);
-
-    // Check if the file exists before initiating the download
-    fs.access(absoluteFilePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        return res.status(404).send({ message: "File not found", success: false, error: err });
-      }
-
-      // Set appropriate headers for the download response
-      res.setHeader("Content-Disposition", `attachment; filename="${path.basename(absoluteFilePath)}"`);
-      res.setHeader("Content-Type", "application/octet-stream");
-
-      // Stream the file data to the response
-      const fileStream = fs.createReadStream(absoluteFilePath);
-      fileStream.on('error', (error) => {
-        console.log(error);
-        return res.status(500).send({ message: "Error reading the document", success: false, error: error });
-      });
-      // Pipe the fileStream to the response
-      fileStream.pipe(res);
-
-      // Send the response after the file stream ends (file download is completed)
-      fileStream.on('end', () => {
-        console.log('File download completed.');
-        res.end();
-      });
-    });
-  } catch (error) {
-    console.log(error);
-    return res.status(500).send({ message: "Something went wrong", success: false });
+  const filename = req.params.filename;
+  if (!filename) {
+    return res.status(400).send({ message: "Filename is required", success: false });
   }
+  const absoluteFilePath = path.join(__dirname, "..", "uploads", filename);
+
+  fs.access(absoluteFilePath, fs.constants.F_OK, (err) => {
+    if (err) {
+      return res.status(404).send({ message: "File not found", success: false });
+    }
+
+    res.setHeader("Content-Disposition", `attachment; filename="${filename}"`);
+    res.setHeader("Content-Type", "application/octet-stream");
+
+    const fileStream = fs.createReadStream(absoluteFilePath);
+    fileStream.on('error', (error) => {
+      console.log(error);
+      return res.status(500).send({ message: "Error reading the document", success: false });
+    });
+    fileStream.pipe(res);
+  });
 };
 
 module.exports = {

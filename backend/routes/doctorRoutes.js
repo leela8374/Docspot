@@ -22,7 +22,8 @@ const upload = multer({ storage: storage });
 
 const router = express.Router();
 
-router.post("/updateprofile", authMiddleware, updateDoctorProfileController);
+// If you want to allow file upload in profile update, use upload.single('image') or similar
+router.post("/updateprofile", authMiddleware, upload.single('image'), updateDoctorProfileController);
 
 router.get(
   "/getdoctorappointments",
@@ -32,8 +33,9 @@ router.get(
 
 router.post("/handlestatus", authMiddleware, handleStatusController);
 
+// Use a route parameter for downloading a specific document
 router.get(
-  "/getdocumentdownload",
+  "/getdocumentdownload/:filename",
   authMiddleware,
   documentDownloadController
 );
