@@ -27,7 +27,6 @@ const AdminDoctors = () => {
    }
 
    const handleApprove = async (doctorId, status, userid) => {
-      console.log(doctorId, status, userid)
       try {
          const res = await axios.post('http://localhost:8001/api/admin/getapprove', { doctorId, status, userid }, {
             headers: {
@@ -37,8 +36,13 @@ const AdminDoctors = () => {
 
          if (res.data.success) {
             message.success(res.data.message)
+            // Update the doctor's status locally
+            setDoctors(prev =>
+               prev.map(doc =>
+                  doc._id === doctorId ? { ...doc, status: status } : doc
+               )
+            );
          }
-         console.log(res)
       } catch (error) {
          console.log(error)
          message.error('something went wrong')
@@ -46,7 +50,6 @@ const AdminDoctors = () => {
    }
 
    const handleReject = async (doctorId, status, userid) => {
-      console.log(doctorId, status, userid)
       try {
          const res = await axios.post('http://localhost:8001/api/admin/getreject', { doctorId, status, userid }, {
             headers: {
@@ -56,8 +59,13 @@ const AdminDoctors = () => {
 
          if (res.data.success) {
             message.success(res.data.message)
+            // Update the doctor's status locally
+            setDoctors(prev =>
+               prev.map(doc =>
+                  doc._id === doctorId ? { ...doc, status: status } : doc
+               )
+            );
          }
-         console.log(res)
       } catch (error) {
          console.log(error)
          message.error('something went wrong')
